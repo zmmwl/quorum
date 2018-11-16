@@ -1195,9 +1195,25 @@ func (s *PublicTransactionPoolAPI) SendTransaction(ctx context.Context, args Sen
 
 // SendRawTransaction will add the signed transaction to the transaction pool.
 // The sender is responsible for signing the transaction and using the correct nonce.
-func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, encodedTx hexutil.Bytes) (common.Hash, error) {
+func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, args SendTxArgs) (common.Hash, error) {
+
+	data := []byte(args.Data)
+	isPrivate := args.PrivateFor != nil
+
+	if isPrivate {
+		if len(data) > 0 {
+			//Send private transaction to privacy manager
+			log.Info("sending private tx", "data", fmt.Sprintf("%x", data), "privatefrom", args.PrivateFrom, "privatefor", args.PrivateFor)
+			result, err := private.P.SendSignedTx(data, args.PrivateFrom, args.PrivateFor)
+			log.Info("sent private tx", "result", fmt.Sprintf("%x", result), "privatefrom", args.PrivateFrom, "privatefor", args.PrivateFor)
+			if err != nil {
+				return common.Hash{}, err
+			}
+		}
+	}
+
 	tx := new(types.Transaction)
-	if err := rlp.DecodeBytes(encodedTx, tx); err != nil {
+	if err := rlp.DecodeBytes(data, tx); err != nil {
 		return common.Hash{}, err
 	}
 	return submitTransaction(ctx, s.b, tx, tx.IsPrivate())
