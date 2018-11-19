@@ -1197,14 +1197,19 @@ func (s *PublicTransactionPoolAPI) SendTransaction(ctx context.Context, args Sen
 // The sender is responsible for signing the transaction and using the correct nonce.
 func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, args SendTxArgs) (common.Hash, error) {
 
-	data := []byte(args.Data)
+	tx := new(types.Transaction)
+	if err := rlp.DecodeBytes(args.Data, tx); err != nil {
+		return common.Hash{}, err
+	}
+
+	txHash := []byte(tx.Data())
 	isPrivate := args.PrivateFor != nil
 
 	if isPrivate {
-		if len(data) > 0 {
+		if len(txHash) > 0 {
 			//Send private transaction to privacy manager
-			log.Info("sending private tx", "data", fmt.Sprintf("%x", data), "privatefor", args.PrivateFor)
-			result, err := private.P.SendSignedTx(data, args.PrivateFor)
+			log.Info("sending private tx", "data", fmt.Sprintf("%x", txHash), "privatefor", args.PrivateFor)
+			result, err := private.P.SendSignedTx(txHash, args.PrivateFor)
 			log.Info("sent private tx", "result", fmt.Sprintf("%x", result), "privatefor", args.PrivateFor)
 			if err != nil {
 				return common.Hash{}, err
@@ -1212,10 +1217,6 @@ func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, args 
 		}
 	}
 
-	tx := new(types.Transaction)
-	if err := rlp.DecodeBytes(data, tx); err != nil {
-		return common.Hash{}, err
-	}
 	return submitTransaction(ctx, s.b, tx, tx.IsPrivate())
 }
 
