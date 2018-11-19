@@ -1217,7 +1217,7 @@ func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, args 
 		}
 	}
 
-	return submitTransaction(ctx, s.b, tx, tx.IsPrivate())
+	return submitTransaction(ctx, s.b, tx, isPrivate)
 }
 
 // Sign calculates an ECDSA signature for:
