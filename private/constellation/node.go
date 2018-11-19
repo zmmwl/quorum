@@ -106,15 +106,13 @@ func (c *Client) SendPayload(pl []byte, b64From string, b64To []string) ([]byte,
 	return ioutil.ReadAll(base64.NewDecoder(base64.StdEncoding, res.Body))
 }
 
-func (c *Client) SendSignedPayload(pl []byte, b64From string, b64To []string) ([]byte, error) {
-	buf := bytes.NewBuffer(pl)
-	req, err := http.NewRequest("POST", "http+unix://c/sendsigned", buf)
+func (c *Client) SendSignedPayload(signedPayload []byte, b64To []string) ([]byte, error) {
+	buf := bytes.NewBuffer(signedPayload)
+	req, err := http.NewRequest("POST", "http+unix://c/sendsignedtx", buf)
 	if err != nil {
 		return nil, err
 	}
-	if b64From != "" {
-		req.Header.Set("c11n-from", b64From)
-	}
+
 	req.Header.Set("c11n-to", strings.Join(b64To, ","))
 	req.Header.Set("Content-Type", "application/octet-stream")
 	res, err := c.httpClient.Do(req)

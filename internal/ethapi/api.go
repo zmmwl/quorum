@@ -1203,9 +1203,9 @@ func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, args 
 	if isPrivate {
 		if len(data) > 0 {
 			//Send private transaction to privacy manager
-			log.Info("sending private tx", "data", fmt.Sprintf("%x", data), "privatefrom", args.PrivateFrom, "privatefor", args.PrivateFor)
-			result, err := private.P.SendSignedTx(data, args.PrivateFrom, args.PrivateFor)
-			log.Info("sent private tx", "result", fmt.Sprintf("%x", result), "privatefrom", args.PrivateFrom, "privatefor", args.PrivateFor)
+			log.Info("sending private tx", "data", fmt.Sprintf("%x", data), "privatefor", args.PrivateFor)
+			result, err := private.P.SendSignedTx(data, args.PrivateFor)
+			log.Info("sent private tx", "result", fmt.Sprintf("%x", result), "privatefor", args.PrivateFor)
 			if err != nil {
 				return common.Hash{}, err
 			}
