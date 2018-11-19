@@ -41,7 +41,6 @@ func (g *Constellation) SendSignedTx(data []byte, to []string) (out []byte, err 
 	if err != nil {
 		return nil, err
 	}
-	g.c.Set(string(out), data, cache.DefaultExpiration)
 	return out, nil
 }
 
