@@ -1078,6 +1078,11 @@ type SendTxArgs struct {
 	//End-Quorum
 }
 
+// SendRawTxArgs represents the arguments to submit a new signed private transaction into the transaction pool.
+type SendRawTxArgs struct {
+	PrivateFor  []string `json:"privateFor"`
+}
+
 // prepareSendTxArgs is a helper function that fills in default values for unspecified tx fields.
 func (args *SendTxArgs) setDefaults(ctx context.Context, b Backend) error {
 	if args.Gas == nil {
@@ -1195,10 +1200,10 @@ func (s *PublicTransactionPoolAPI) SendTransaction(ctx context.Context, args Sen
 
 // SendRawTransaction will add the signed transaction to the transaction pool.
 // The sender is responsible for signing the transaction and using the correct nonce.
-func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, args SendTxArgs) (common.Hash, error) {
+func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, encodedTx hexutil.Bytes, args SendRawTxArgs) (common.Hash, error) {
 
 	tx := new(types.Transaction)
-	if err := rlp.DecodeBytes(args.Data, tx); err != nil {
+	if err := rlp.DecodeBytes(encodedTx, tx); err != nil {
 		return common.Hash{}, err
 	}
 

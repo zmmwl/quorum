@@ -133,6 +133,6 @@ func (b *ContractBackend) EstimateGas(ctx context.Context, msg ethereum.CallMsg)
 // into the pending pool for execution.
 func (b *ContractBackend) SendTransaction(ctx context.Context, tx *types.Transaction) error {
 	raw, _ := rlp.EncodeToBytes(tx)
-	_, err := b.txapi.SendRawTransaction(ctx, ethapi.SendTxArgs{Data:raw})
+	_, err := b.txapi.SendRawTransaction(ctx, raw, ethapi.SendRawTxArgs{})
 	return err
 }
