@@ -366,8 +366,8 @@ web3._extend({
 	property: 'eth',
 	methods: [
 		new web3._extend.Method({
-			name: 'sendRawTransaction',
-			call: 'eth_sendRawTransaction',
+			name: 'sendRawPrivateTransaction',
+			call: 'eth_sendRawPrivateTransaction',
 			params: 2,
 			inputFormatter: [null, null]
 		}),
