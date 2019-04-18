@@ -248,7 +248,7 @@ func (c *core) startNewRound(round *big.Int) {
 	// Calculate new proposer
 	c.valSet.CalcProposer(lastProposer, newView.Round.Uint64())
 	c.waitingForRoundChange = false
-	c.setState(StateAcceptRequest)
+	c.setState(StateAcceptRequest)  //zmm: set StateAcceptRequest state
 	if roundChange && c.IsProposer() && c.current != nil {
 		// If it is locked, propose the old proposal
 		// If we have pending request, propose pending request

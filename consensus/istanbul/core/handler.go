@@ -48,7 +48,7 @@ func (c *core) Stop() error {
 
 // Subscribe both internal and external events
 func (c *core) subscribeEvents() {
-	c.events = c.backend.EventMux().Subscribe(
+	c.events = c.backend.EventMux().Subscribe( //zmm: subscribe Mux event
 		// external events
 		istanbul.RequestEvent{},
 		istanbul.MessageEvent{},
@@ -81,7 +81,7 @@ func (c *core) handleEvents() {
 
 	for {
 		select {
-		case event, ok := <-c.events.Chan():
+		case event, ok := <-c.events.Chan():  //zmm: 响应 seal RequestEvent  Mux Event handler
 			if !ok {
 				return
 			}
