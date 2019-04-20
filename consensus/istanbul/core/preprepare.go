@@ -31,7 +31,7 @@ func (c *core) sendPreprepare(request *istanbul.Request) {
 		curView := c.currentView()
 		preprepare, err := Encode(&istanbul.Preprepare{
 			View:     curView,
-			Proposal: request.Proposal,
+			Proposal: request.Proposal, //zmm: request.Proposal就是block
 		})
 		if err != nil {
 			logger.Error("Failed to encode", "view", curView)
@@ -39,7 +39,7 @@ func (c *core) sendPreprepare(request *istanbul.Request) {
 		}
 
 		c.broadcast(&message{
-			Code: msgPreprepare,
+			Code: msgPreprepare, //zmm: broadcast msgPreprepare msg
 			Msg:  preprepare,
 		})
 	}

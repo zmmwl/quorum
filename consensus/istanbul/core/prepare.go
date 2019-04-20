@@ -45,7 +45,7 @@ func (c *core) handlePrepare(msg *message, src istanbul.Validator) error {
 		return errFailedDecodePrepare
 	}
 
-	if err := c.checkMessage(msgPrepare, prepare.View); err != nil {
+	if err := c.checkMessage(msgPrepare, prepare.View); err != nil { //zmm: 比较view是否相同(同样sequence,同样round)
 		return err
 	}
 
@@ -74,7 +74,7 @@ func (c *core) verifyPrepare(prepare *istanbul.Subject, src istanbul.Validator) 
 	logger := c.logger.New("from", src, "state", c.state)
 
 	sub := c.current.Subject()
-	if !reflect.DeepEqual(prepare, sub) {
+	if !reflect.DeepEqual(prepare, sub) { //zmm: 和preprepare保存的block的hash做对比
 		logger.Warn("Inconsistent subjects between PREPARE and proposal", "expected", sub, "got", prepare)
 		return errInconsistentSubject
 	}

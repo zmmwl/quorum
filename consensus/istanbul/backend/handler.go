@@ -62,7 +62,7 @@ func (sb *backend) decode(msg p2p.Msg) ([]byte, common.Hash, error) {
 }
 
 // HandleMsg implements consensus.Handler.HandleMsg
-func (sb *backend) HandleMsg(addr common.Address, msg p2p.Msg) (bool, error) {
+func (sb *backend) HandleMsg(addr common.Address, msg p2p.Msg) (bool, error) { //zmm: peer's istanbul msg handler
 	sb.coreMu.Lock()
 	defer sb.coreMu.Unlock()
 

@@ -33,7 +33,7 @@ func (c *core) handleRequest(request *istanbul.Request) error {
 	logger.Trace("handleRequest", "number", request.Proposal.Number(), "hash", request.Proposal.Hash())
 
 	c.current.pendingRequest = request
-	if c.state == StateAcceptRequest { //zmm: sendPreprepare
+	if c.state == StateAcceptRequest { //zmm: sendPreprepare when StateAcceptRequest state
 		c.sendPreprepare(request)		//zmm: 发出sendPreprepare消息
 	}
 	return nil
